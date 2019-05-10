@@ -1,0 +1,15 @@
+module.exports = {
+    username: 'xuanhoan',
+    password: 'hoanuet123456',
+    database: 'uettest',
+    col_items: 'items',
+    col_subjects: 'subjects',
+    col_exams: 'exams',
+    col_groups: 'groups',
+    col_users: 'users',
+    col_room: 'rooms',
+    col_categories: 'categories',
+    col_articles: 'articles',
+    col_chats: 'chats',
+    col_chats_room: 'chats_rooms',
+ }
