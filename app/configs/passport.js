@@ -95,7 +95,68 @@ module.exports = function (passport) {
             });
         });
     }));
-  
+    /*--------------------------------------------
+     |  passport đăng nhập google
+     --------------------------------------------*/
+    passport.use('google-login', new LocalStrategy({
+        usernameField: `id`,
+        passwordField: `name`,
+        passReqToCallback: true
+    }, function (req, username, password, done) {
+        process.nextTick(function () {
+            usersModel.findOne({ 'google.id': username }, function (err, user) {
+                if (err)
+                    return done(err);
+                if (user) {
+                    return done(null, user);
+                } else {
+                    let avatarName = randomstring.generate(15) + '.png';
+                    const options = {
+                        url: req.body.avatar,
+                        dest: 'public/uploads/users/' + avatarName
+                    }
+                    download.image(options)
+                        .then(({ filename, image }) => {
+                            let newUser = new usersModel({
+                                local : {
+                                    username : stringHelper.nonAccentVietnamese(req.body.first_name) + stringHelper.nonAccentVietnamese(req.body.last_name)
+                                },
+                                name: req.body.name,
+                                email: req.body.email,
+                                school: '',
+                                phonenumber: '',
+                                status : 'active',
+                                group: '5c750d2295033604111f2c07',
+                                created : {
+                                    user_id: systemConfig.system_admin_id,
+                                    user_name: systemConfig.system_admin_name,
+                                    time: Date.now()
+                                },
+                                modified: {
+                                    user_id: systemConfig.system_admin_id,
+                                    user_name: systemConfig.system_admin_name,
+                                    time: Date.now()
+                                },
+                                google : {
+                                    id           : req.body.id,
+                                    token        : req.body.accessToken,
+                                },
+                                avatar: avatarName
+                            });
+                            newUser.save(function (err) {
+                                if (err)
+                                    throw err;
+                                return done(null, newUser);
+                            });
+                        })
+                        .catch((err) => {
+                            return done(err);
+                        })
+                    
+                }
+            });
+        });
+    }));
     
 };
 
