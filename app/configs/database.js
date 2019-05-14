@@ -1,6 +1,6 @@
 module.exports = {
-    username: 'xuanhoan',
-    password: 'hoanuet123456',
+    username: '',
+    password: '',
     database: 'uettest',
     col_items: 'items',
     col_subjects: 'subjects',
